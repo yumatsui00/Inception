@@ -13,29 +13,29 @@ Docker とは、簡単に言うと、アプリケーションと、その依存�
 3. OSのカーネル共有をするため、仮想マシンに比べ軽量で、起動時間も短い
 4. (DockerHub)[https://hub.docker.com/] から、いろいろなコンテナイメージを共有できる
 
-といった利点がある。例えば、Webサイトを運営するときに、(NGINX（Webサーバーソフトの１つ）)[https://nginx.org/en/]をインストールする必要があるとします。通常通りにインストールするには、適切なOSや依存関係が必要となる。
+といった利点がある。例えば、Webサイトを運営するときに、(NGINX)[https://nginx.org/en/](Webサーバーソフトの一つ)をインストールする必要があるとします。通常通りにインストールするには、適切なOSや依存関係が必要となる。
 しかし、NGINXのドッカーイメージはNGINXによってDockerHub)[https://hub.docker.com/]に公開されており、Dockerコンテナを用いてこれをインストールすればそれらの問題を解決できる。
 NGINXイメージ例
 ```
-						FROM		alpine:3.12
+FROM		alpine:3.12
 
-						RUN			apk update && apk upgrade && apk add	\
-													openssl			\
-													nginx			\
-													curl			\
-													vim				\
-													sudo
+RUN			apk update && apk upgrade && apk add	\
+			openssl			\
+			nginx			\
+			curl			\
+			vim				\
+			sudo
 
-						RUN			rm -f /etc/nginx/nginx.conf
+RUN			rm -f /etc/nginx/nginx.conf
 
-						COPY		./config/nginx.conf /etc/nginx/nginx.conf
-						COPY		scripts/setup_nginx.sh /setup_nginx.sh
+COPY		./config/nginx.conf /etc/nginx/nginx.conf
+COPY		scripts/setup_nginx.sh /setup_nginx.sh
 
-						RUN			chmod -R +x /setup_nginx.sh
+RUN			chmod -R +x /setup_nginx.sh
 
-						EXPOSE		443
+EXPOSE		443
 
-						ENTRYPOINT	["sh", "setup_nginx.sh"]
+ENTRYPOINT	["sh", "setup_nginx.sh"]
 ```
 
 このファイルをDockerfileとよび、ドッカーイメージのメインファイルです。
@@ -65,6 +65,7 @@ FROM ubuntu:20.04
 ```
 RUN <コマンド>
 ```
+
 RUN命令は、新しいレイヤーを作成し、指定されたコマンドを実行するために使用される。コマンド実行により、
 - 必要なソフトウェアや依存関係のインストール
 - システムのセットアップ
@@ -86,6 +87,7 @@ RUN ["apt-get", "install", "-y", "curl"]
 ```
 COPY <ソース> <コピー先>
 ```
+
 Dockerfile内で、ホストマシンからコンテナイメージ内にファイルやディレクトリをコピーするために使用される。
 RUNコマンド内でコピーを行うことも可能だが、COPY命令を行うことで、可読性の向上、キャッシュの適切な利用によるビルド時間の短縮、無駄なレイヤーを作成しない効率的なイメージの作成といった観点から、COPY命令の使用が推奨される。
 
@@ -95,6 +97,7 @@ RUNコマンド内でコピーを行うことも可能だが、COPY命令を行�
 ```
 EXPOSE　<ポート番号>　[<ポート番号２>...]
 ```
+
 EXPOSE命令は、命令と名付けられて入るものの、ドキュメントとしての役割が強い。コンテナがどのポートでリスんしているかを明示しており、他の開発者がコンテナのネットワーク設定を理解しやすくするために存在している。
 そのため、EXPOSE命令自体はポートを公開するのではなく実際に公開するには、.ymlファイルで追加の設定が必要となる。
 
@@ -105,11 +108,13 @@ EXPOSE命令は、命令と名付けられて入るものの、ドキュメン�
 シェル形式
 ENTRYPOINT <command>
 ```
+
 Dockerfile内でコンテナが起動された際に、最初に自動的に実行されるメインプロセスを指定するために使用される。EXEC形式も可。例として、
 ```
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 ```
 のように設定しておくと、コンテナの起動と同時に、entrypoint.shというスクリプトを実行することができる。
+
 
 
 
