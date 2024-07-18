@@ -14,7 +14,7 @@ Docker とは、簡単に言うと、アプリケーションと、その依存�
 4. [DockerHub](https://hub.docker.com/) から、いろいろなコンテナイメージを共有できる
 
 といった利点がある。例えば、Webサイトを運営するときに、[NGINX](https://nginx.org/en/)(Webサーバーソフトの一つ)をインストールする必要があるとします。通常通りにインストールするには、適切なOSや依存関係が必要となる。
-しかし、NGINXのドッカーイメージはNGINXによってDockerHub)[https://hub.docker.com/]に公開されており、Dockerコンテナを用いてこれをインストールすればそれらの問題を解決できる。
+しかし、NGINXのドッカーイメージはNGINXによって[DockerHub](https://hub.docker.com/)に公開されており、Dockerコンテナを用いてこれをインストールすればそれらの問題を解決できる。
 NGINXイメージ例
 ```
 FROM		alpine:3.12
