@@ -42,7 +42,6 @@ ENTRYPOINT	["sh", "setup_nginx.sh"]
 
 ## Dockerfileのキーワード
 ### FROM
-基本構文
 ```
 FROM <イメージ名>[:<タグ>]
 ```
@@ -61,7 +60,6 @@ FROM ubuntu:20.04
 
 
 ### RUN
-基本構文
 ```
 RUN <コマンド>
 ```
@@ -83,7 +81,6 @@ RUN ["apt-get", "install", "-y", "curl"]
 
 
 ### COPY
-基本構文
 ```
 COPY <ソース> <コピー先>
 ```
@@ -93,7 +90,6 @@ RUNコマンド内でコピーを行うことも可能だが、COPY命令を行�
 
 
 ### EXPOSE
-基本構文
 ```
 EXPOSE　<ポート番号>　[<ポート番号２>...]
 ```
@@ -103,7 +99,6 @@ EXPOSE命令は、命令と名付けられて入るものの、ドキュメン�
 
 
 ### ENTRYPOINT
-基本構文
 ```
 シェル形式
 ENTRYPOINT <command>
