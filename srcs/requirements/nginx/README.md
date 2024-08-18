@@ -102,6 +102,7 @@ http {
 
 このような設定ファイルの時、http://localhost/images/example.png　というリクエストがクライアントから来た場合、nginxはローカルファイルで言う/data/images/example.pngを探して返す。
 http://localhost/some/example.html　というリクエストには、/data/www/some/example.htmlファイルを探してくる。
+今回、nginxの設定ファイルでは/var/www/htmlにwordpressという名前のvolumeを作成し、wordpressコンテナと共有している。
 
 
 次に、簡単なプロキシサーバーのセットアップについて
