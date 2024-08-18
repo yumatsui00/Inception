@@ -167,3 +167,15 @@ defaultはその中でも、デフォルトの設定ファイル
 追加の設定ファイル /etc/nginx/conf.d
 特定のモジュールの追加の構成要素(SSLやロギング設定)をここに保存するのが一般的で、nginx.confでこのファイルを読み込むように指定するのが一般的
 
+
+
+
+URIについて
+scheme://authority/path?query#fragment
+
+ex
+https://chatgpt.com/c/asfasdf
+
+scheme: リソースへのアクセス方法
+authority: リソースが存在するサーバーを示す。通常はドメイン名（またはIP）と、必要に応じてポート番号が含まれる　ex)127.0.0.1:8080
+path: path

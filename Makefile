@@ -1,4 +1,4 @@
-WP_PATH = /home/data/wordpress
+WP_PATH = /home/data/html
 MariaDB_PATH = /home/data/mariadb
 
 all: up

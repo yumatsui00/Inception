@@ -1,19 +1,29 @@
 #!/bin/bash
 
-curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+
+mkdir /var/www
+mkdir /var/www/html
+
+cd /var/www/html
+if [! -f /usr/local/bin/wp]; then
+    curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+fi
 
 chmod +x wp-cli.phar
 
 mv wp-cli.phar /usr/local/bin/wp
 
-cd /var/www/wordpress
+wp core download --allow-root
 
-chmod -R 755 /var/www/wordpress/
+# mv /var/www/html/wp-config-sample.php /var/www/html/wp-config.php
 
-chown -R www-data:www-data /var/www/wordpress
+/bin/bash
 
-#---------------------------------------------------ping mariadb---------------------------------------------------#
-# check if mariadb container is up and running
+
+# chown -R www-data:www-data /var/www/wordpress
+
+# #---------------------------------------------------ping mariadb---------------------------------------------------#
+# # check if mariadb container is up and running
 ping_mariadb_container() {
     nc -zv mariadb 3306 > /dev/null # ping the mariadb container
     return $?
@@ -28,7 +38,7 @@ while [ $(date +%s) -lt $end_time ]; do
         break # Exit the loop if MariaDB is up
     else
         echo "[========WAITING FOR MARIADB TO START...========]🤔"
-        sleep 1d
+        sleep 1
     fi
 done
 
@@ -36,10 +46,10 @@ if [ $(date +%s) -ge $end_time ]; then #-ge : greater than or equal to ~
     echo "[========MARIADB IS NOT RESPONDING========]🏳"
 fi
 
-# download wordpress core files
-#wp core download: WP-CLIのcoreコマンドの一部で、WordPressのコアファイルをダウンロードするために使用します。これは、WordPressを新規にインストールする際の最初のステップとして使用されます。
-#--allow-root: このオプションは、rootユーザーでコマンドを実行する際に必要です。通常、セキュリティの理由から、rootユーザーでの操作は推奨されませんが、Dockerコンテナや特定のサーバー設定では必要となる場合があります。
-wp core download --allow-root
+# # download wordpress core files
+# #wp core download: WP-CLIのcoreコマンドの一部で、WordPressのコアファイルをダウンロードするために使用します。これは、WordPressを新規にインストールする際の最初のステップとして使用されます。
+# #--allow-root: このオプションは、rootユーザーでコマンドを実行する際に必要です。通常、セキュリティの理由から、rootユーザーでの操作は推奨されませんが、Dockerコンテナや特定のサーバー設定では必要となる場合があります。
+# wp core download --allow-root
 # create wp-config.php file with database details
 #wp core config: WP-CLIのcoreコマンドの一部で、WordPressの設定ファイル（wp-config.php）を生成するために使用します。このファイルには、WordPressがデータベースと通信するための設定が含まれます。
 #--dbhost=mariadb:3306: データベースサーバーのホスト名とポート番号を指定します。ここでは、データベースがmariadbというホスト名で、ポート3306（MariaDBやMySQLのデフォルトポート）で動作していると仮定しています。
@@ -47,7 +57,7 @@ wp core download --allow-root
 #--dbuser="$MYSQL_USER": データベースにアクセスするためのユーザー名を指定します。$MYSQL_USER変数には、データベースユーザー名が設定されている必要があります。例えば、rootやwordpress_userなどです。
 #--dbpass="$MYSQL_PASSWORD": データベースユーザーのパスワードを指定します。$MYSQL_PASSWORD変数には、このユーザーのパスワードが設定されている必要があります。
 #--allow-root: このオプションは、rootユーザーでコマンドを実行する際に使用します。通常、セキュリティ上の理由から、rootユーザーでの操作は避けるべきですが、特定のサーバー環境では必要となる場合があります。
-wp core config --dbhost=mariadb:3306 --dbname="$MYSQL_DB" --dbuser="$MYSQL_USER" --dbpass="$MYSQL_PASSWORD" --allow-root
+wp config create --dbhost=mariadb:3306 --dbname="$MYSQL_DB" --dbuser="$MYSQL_USER" --dbpass="$MYSQL_PASSWORD" --allow-root
 # install wordpress with the given title, admin username, password and email
 #wp core install: WP-CLIのcoreコマンドの一部で、WordPressのインストールを行います。
 #--url="$DOMAIN_NAME": WordPressサイトのURLを指定します。例えば、https://example.comなどのドメイン名がここに入ります。
@@ -65,11 +75,13 @@ wp core install --url="$DOMAIN_NAME" --title="$WP_TITLE" --admin_user="$WP_ADMIN
 #--user_pass=<password>: ユーザーのパスワードを指定します。
 wp user create "$WP_U_NAME" "$WP_U_EMAIL" --user_pass="$WP_U_PASS" --role="$WP_U_ROLE" --allow-root
 
-# change listen port from unix socket to 9000
+/bin/bash
+# change listen port from uni+x socket to 9000
 # 　php_hpmがfastCGIのリクエストを受け付けるための方法をUNIXソケットからTCPポート9000に変更している。
 # これは、あくまでphp-hpmの内部設置絵の一部であり、ネットワーク構成を変えるものではない
 # UNIXソケットについて　同一システム内のプロセス間通信を行うためのインターフェース。同一コンテナ内での使用が有効。異なるコンテナ感で間ではTCP
 sed -i '36 s@/run/php/php7.4-fpm.sock@9000@' /etc/php/7.4/fpm/pool.d/www.conf
+
 # create a directory for php-fpm
 mkdir -p /run/php
 # start php-fpm service in the foreground to keep the container running

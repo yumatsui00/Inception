@@ -18,6 +18,8 @@ services:
     networks:
       - inception
     restart: always
+    expose:
+      - "3306"
 
   nginx:
     image: nginx:user
@@ -28,7 +30,7 @@ services:
     depends_on:
       - wordpress
     volumes:
-      - wordpress:/var/www/wordpress
+      - wordpress:/var/www/html
     networks:
       - inception
     restart: always
@@ -40,12 +42,14 @@ services:
     depends_on:
       - mariadb
     volumes:
-      - wordpress:/var/www/wordpress
+      - wordpress:/var/www/html
     env_file :
       - .env
     networks:
       - inception
     restart: always
+    expose:
+      - "9000"
 
 volumes:
   mariadb:
@@ -66,3 +70,4 @@ volumes:
 networks:
   inception:
     name: inception
+    driver: bridge
