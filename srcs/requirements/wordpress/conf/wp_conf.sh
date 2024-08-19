@@ -5,9 +5,8 @@ mkdir /var/www
 mkdir /var/www/html
 
 cd /var/www/html
-if [! -f /usr/local/bin/wp]; then
-    curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
-fi
+
+curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
 
 chmod +x wp-cli.phar
 
@@ -16,8 +15,6 @@ mv wp-cli.phar /usr/local/bin/wp
 wp core download --allow-root
 
 # mv /var/www/html/wp-config-sample.php /var/www/html/wp-config.php
-
-/bin/bash
 
 
 # chown -R www-data:www-data /var/www/wordpress
@@ -58,6 +55,8 @@ fi
 #--dbpass="$MYSQL_PASSWORD": データベースユーザーのパスワードを指定します。$MYSQL_PASSWORD変数には、このユーザーのパスワードが設定されている必要があります。
 #--allow-root: このオプションは、rootユーザーでコマンドを実行する際に使用します。通常、セキュリティ上の理由から、rootユーザーでの操作は避けるべきですが、特定のサーバー環境では必要となる場合があります。
 wp config create --dbhost=mariadb:3306 --dbname="$MYSQL_DB" --dbuser="$MYSQL_USER" --dbpass="$MYSQL_PASSWORD" --allow-root
+wp theme install hestia --activate --allow-root
+
 # install wordpress with the given title, admin username, password and email
 #wp core install: WP-CLIのcoreコマンドの一部で、WordPressのインストールを行います。
 #--url="$DOMAIN_NAME": WordPressサイトのURLを指定します。例えば、https://example.comなどのドメイン名がここに入ります。
@@ -75,7 +74,6 @@ wp core install --url="$DOMAIN_NAME" --title="$WP_TITLE" --admin_user="$WP_ADMIN
 #--user_pass=<password>: ユーザーのパスワードを指定します。
 wp user create "$WP_U_NAME" "$WP_U_EMAIL" --user_pass="$WP_U_PASS" --role="$WP_U_ROLE" --allow-root
 
-/bin/bash
 # change listen port from uni+x socket to 9000
 # 　php_hpmがfastCGIのリクエストを受け付けるための方法をUNIXソケットからTCPポート9000に変更している。
 # これは、あくまでphp-hpmの内部設置絵の一部であり、ネットワーク構成を変えるものではない
