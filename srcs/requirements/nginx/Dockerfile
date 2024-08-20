@@ -11,6 +11,8 @@ RUN apt update -y && apt upgrade -y &&\
 
 COPY	conf/nginx.conf /etc/nginx/nginx.conf
 
+
+
 CMD ["nginx", "-g", "daemon off;"]
 
 EXPOSE 443

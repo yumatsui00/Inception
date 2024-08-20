@@ -55,7 +55,8 @@ fi
 #--dbpass="$MYSQL_PASSWORD": データベースユーザーのパスワードを指定します。$MYSQL_PASSWORD変数には、このユーザーのパスワードが設定されている必要があります。
 #--allow-root: このオプションは、rootユーザーでコマンドを実行する際に使用します。通常、セキュリティ上の理由から、rootユーザーでの操作は避けるべきですが、特定のサーバー環境では必要となる場合があります。
 wp config create --dbhost=mariadb:3306 --dbname="$MYSQL_DB" --dbuser="$MYSQL_USER" --dbpass="$MYSQL_PASSWORD" --allow-root
-wp theme install hestia --activate --allow-root
+# wp theme install hestia --activate --allow-root
+
 
 # install wordpress with the given title, admin username, password and email
 #wp core install: WP-CLIのcoreコマンドの一部で、WordPressのインストールを行います。
@@ -74,6 +75,8 @@ wp core install --url="$DOMAIN_NAME" --title="$WP_TITLE" --admin_user="$WP_ADMIN
 #--user_pass=<password>: ユーザーのパスワードを指定します。
 wp user create "$WP_U_NAME" "$WP_U_EMAIL" --user_pass="$WP_U_PASS" --role="$WP_U_ROLE" --allow-root
 
+# いる？
+# wp search-replace 'http://localhost' "http://$DOMAIN_NAME"
 # change listen port from uni+x socket to 9000
 # 　php_hpmがfastCGIのリクエストを受け付けるための方法をUNIXソケットからTCPポート9000に変更している。
 # これは、あくまでphp-hpmの内部設置絵の一部であり、ネットワーク構成を変えるものではない

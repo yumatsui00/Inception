@@ -8,7 +8,7 @@
 
 services:
   mariadb:
-    image: mariadb:user
+    image: mariadb
     container_name: mariadb
     build: ./requirements/mariadb
     volumes:
@@ -18,11 +18,11 @@ services:
     networks:
       - inception
     restart: always
-    expose:
-      - "3306"
+    ports:
+      - "3306:3306"
 
   nginx:
-    image: nginx:user
+    image: nginx
     container_name: nginx
     build: ./requirements/nginx
     ports:
@@ -36,7 +36,7 @@ services:
     restart: always
 
   wordpress:
-    image: wordpress:user
+    image: wordpress
     container_name: wordpress
     build: ./requirements/wordpress
     depends_on:
@@ -48,8 +48,8 @@ services:
     networks:
       - inception
     restart: always
-    expose:
-      - "9000"
+    ports:
+      - "9000:9000"
 
 volumes:
   mariadb:

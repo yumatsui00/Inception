@@ -12,7 +12,7 @@ sleep 5 # wait for mariadb to start
 mariadb -e "CREATE DATABASE IF NOT EXISTS \`${MYSQL_DB}\`;"
 
 # Create user if not exists
-mariadb -e "CREATE USER IF NOT EXISTS \`${MYSQL_USER}\`@'localhost' IDENTIFIED BY '${MYSQL_PASSWORD}';"
+mariadb -e "CREATE USER IF NOT EXISTS \`${MYSQL_USER}\`@'127.0.0.1' IDENTIFIED BY '${MYSQL_PASSWORD}';"
 
 # Grant privileges to user
 mariadb -e "GRANT ALL PRIVILEGES ON ${MYSQL_DB}.* TO \`${MYSQL_USER}\`@'%' IDENTIFIED BY '${MYSQL_PASSWORD}';"
