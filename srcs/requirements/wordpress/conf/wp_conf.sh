@@ -21,7 +21,7 @@ ping_mariadb_container() {
 }
 
 start_time=$(date +%s)
-end_time=$((start_time + 5))
+end_time=$((start_time + 15))
 while [ $(date +%s) -lt $end_time ]; do
     ping_mariadb_container
     if [ $? -eq 0 ]; then
@@ -54,5 +54,7 @@ mkdir -p /run/php
 wp plugin install redis-cache --active --allow-root
 
 wp plugin update --all --allow-root
+
+wp redis enable --allow-root
 
 /usr/sbin/php-fpm7.4 -F

@@ -25,7 +25,7 @@ volumerm:
 	docker volume rm wordpress
 	docker volume rm mariadb
 
-clean: rmi
+clean:
 	docker rmi wordpress mariadb nginx
 
 inception:
