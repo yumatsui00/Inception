@@ -48,14 +48,14 @@ volumes:
     name: mariadb
     driver: local
     driver_opts:
-      device: /home/data/mariadb
+      device: /home/yumatsui/mariadb
       o : bind
       type : none
   wordpress:
     name: wordpress
     driver: local
     driver_opts:
-      device: /home/data/html
+      device: /home/yumatsui/html
       o : bind
       type : none
 

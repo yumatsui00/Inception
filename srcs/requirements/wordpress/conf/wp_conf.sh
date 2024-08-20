@@ -51,4 +51,8 @@ sed -i '36 s@/run/php/php7.4-fpm.sock@9000@' /etc/php/7.4/fpm/pool.d/www.conf
 
 mkdir -p /run/php
 
+wp plugin install redis-cache --active --allow-root
+
+wp plugin update --all --allow-root
+
 /usr/sbin/php-fpm7.4 -F
