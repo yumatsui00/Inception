@@ -56,6 +56,14 @@ RUN apt update -y && apt upgrade -y &&\
 openssl req -x509 -nodes -out /etc/nginx/ssl/inception.crt -keyout /etc/nginx/ssl/inception.key -subj "/C=JP/ST=Tokyo/L=Shinjuku/O=42Tokyo/OU=42Student/CN=yumatsui.42.fr/UID=yumatsui" &&\
 ```
 
+
+```
+mkdir -p /var/run/nginx
+```
+
+これは、NginxにおけるPIDファイルやソケットファイルを保存するためのディレクトリで、他のプロセスと通信するために使われれ、存在しないとエラーが発生する。
+
+
  後に説明する設定ファイルを、必要な場所にコピーし、CMDを実行。
 
  ```
@@ -166,13 +174,8 @@ servet {
 
 
 例４
-
-```
-server {
-	location / {
-		fastcgi_pass	localfast:9000;
-		fastcgi_param	SCRIPT_FILENAME $document_root$fastcgi_script_name;
-		fastcgi_param	QUERY_STRING　$query_string;
+最初に、MariaDBを起動し、起動が完了するのを５秒待つ。
+string;
 	}
 
 	location ~ \.(gif|jpg|png)$ {

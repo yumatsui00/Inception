@@ -83,7 +83,8 @@ RUN ["apt-get", "install", "-y", "curl"]
 ### COPY
 ```
 COPY <ソース> <コピー先>
-```
+最初に、MariaDBを起動し、起動が完了するのを５秒待つ。
+
 
 Dockerfile内で、ホストマシンからコンテナイメージ内にファイルやディレクトリをコピーするために使用される。
 RUNコマンド内でコピーを行うことも可能だが、COPY命令を行うことで、可読性の向上、キャッシュの適切な利用によるビルド時間の短縮、無駄なレイヤーを作成しない効率的なイメージの作成といった観点から、COPY命令の使用が推奨される。
@@ -110,42 +111,6 @@ ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 ```
 のように設定しておくと、コンテナの起動と同時に、entrypoint.shというスクリプトを実行することができる。
 
-
-
-
-## Docker Compose
-
-docker compose は復数のコンテナを定義、管理するためのツールで、サービスを定義するyamlファイルを作成し、単一のコマンドですべてのサービスの起動、停止や、コンテナ間での通信が可能となる。
-例えば、42学生の使用するintraを構築するにはNGINXを使ったウェブサイト、intraポータルサイトのサービス、出退勤を記録するデータベース、が必要となる。これらをDocker Composeを用いて管理するために、以下のようなdocker-compose.ymlを作成する。
-
-```
-version: "3"
-
-services:
-  website:
-    build: requirements/website/
-    env_file: .env
-    container_name: website
-    ports:
-      - "80:80"
-    restart: always
-
-  intra:
-    build: requirements/intra/
-    env_file: .env
-    container_name: intra
-    ports:
-      - "80:80"
-    restart: always
-
-  badgeuse:
-    container_name: badgeuse
-    build: mariadb
-    env_file: .env
-    restart: always
-```
-
-このDockercomposeと同一ディレクトリ上で、docker-compose build や、　docker-compose up -d, docker-compose down といったコマンドを入力するだけで、サービスの起動、停止を簡単に行える。
 
 
 ## プロジェクトの概要
@@ -176,18 +141,9 @@ services:
 - ローカルIPアドレスにドメイン名を設定する。ドメイン名はlogin.42.fr（自分のログイン名）
 - .envファイルを使用して環境変数を管理し、パスワードはDockerfile煮含めない
 - NGINXコンテナはポート443のみを通じてインフラストラクチャにアクセスする唯一のエントリーポイントである
+ start php-fpm service in the foreground to keep the container running
+#フォアグラウンドで実行。バックグラウンドで実行しようとして、フォアグラウンドに実行するコマンドがないとセル自体が終了し、シェルが終了すると、コンテナのメインプロセスが終了したとみなされコンテナ自体が修了する。しかし、フォアグラウンドで実行されている場合は維持可能
 
-### Bonus
-- WordPressサイトのキャッシュを適切に管理するためのRedisキャッシュ
-- WordPressサイトのファイルのボリュームに接続するFTPサーバーのコンテナの設定
-- PHP以外の言語で作成されたシンプルな静的サイトの作成（例：ポートフォリオ）
-- Adminerの設定
-- その他、有用であると考える任意のサービスを設定
-
-```
-project-root/
-├── Makefile
-├── srcs/
 │   ├── docker-compose.yml
 │   ├── .env
 │   └── requirements/
@@ -218,4 +174,20 @@ TLS (Transport Layer Security)とは、インターネット上でデータを�
 といった機能を提供している。SSLはTLSの前身プロトコルであり、これらを用いることで、より安全なHTTPS通信を可能にしている。
 
 
+## その他
 
+### DockerとDocker composeの仕組み
+コンテナ化技術を利用してアプリケーションの開発、テスト、デプロイを効率化するための技術。
+コンテナとは、アプリケーションとその依存関係を一緒にパッケージ化してどこでも一貫した動作を保証するための技術で、VMとは異なり、ホストOSのカーネルを共有しアプリケーションごとに分離されれた環境を提供してくれる。実行環境をパッケージ化したテンプレートをイメージとよび、それを実行することでコンテナが起動される。
+ドッカーコンポーズは各コンテナをサービスと定義し、サービス間の通信を管理するためのネットワークやデータの永続化を管理するためのボリュームの定義などのサービスを復数同時に管理するためのツールとなっている。
+
+### Docker Composeを使用するDocker imageと使用しないDocker imageの違い
+DockerComposeを使用しない場合、基本的にはここのドッカーイメージを手動で管理することになり、単一のサービスやシンプルなアプリケーションといった、他のサービスを必要としない場合に用いられる。
+
+DockerComposeを使用する場合は、復数のDockerImageをまとめて管理し、簡単にすべての起動、停止、接続が可能となる。
+
+### VMと比較したDockerの利点
+- 軽量性　ドッカーはホストOSのカーネルを共有し、アプリケーションとその依存関係のみをパッケージ化するので非常に軽量。
+- 起動時間　カーネルの共有をしているため、OSの起動プロセスが不要で迅速な起動が可能
+- リソース効率　ホストマシンのリソースを効率的に利用し、メモリやCPUの消費を抑えられる。
+- 移植性　依存関係とアプリケーションをパッケージ化しているので、異なる環境間での移植が用意

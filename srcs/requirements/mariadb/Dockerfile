@@ -8,5 +8,4 @@ COPY ./tools/mdb-conf.sh /mdb-conf.sh
 
 RUN chmod +x /mdb-conf.sh
 
-# define entrypoint command to run when the container starts
 ENTRYPOINT ["/mdb-conf.sh"]

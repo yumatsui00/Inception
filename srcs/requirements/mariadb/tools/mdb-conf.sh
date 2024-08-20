@@ -1,13 +1,11 @@
 #!/bin/bash
 
-#--------------mariadb start--------------#
-service mariadb start # start mariadb
-sleep 5 # wait for mariadb to start
+service mariadb start
+sleep 5
 
 # maria -e declear that the query after them are executed to mariaDB
 # the query is from SQL
 
-#--------------mariadb config--------------#
 # Create database if not exists
 mariadb -e "CREATE DATABASE IF NOT EXISTS \`${MYSQL_DB}\`;"
 
@@ -20,7 +18,6 @@ mariadb -e "GRANT ALL PRIVILEGES ON ${MYSQL_DB}.* TO \`${MYSQL_USER}\`@'%' IDENT
 # Flush privileges to apply changes
 mariadb -e "FLUSH PRIVILEGES;"
 
-#--------------mariadb restart--------------#
 # Shutdown mariadb to restart with new config
 mysqladmin -u root -p$MYSQL_ROOT_PASSWORD shutdown
 

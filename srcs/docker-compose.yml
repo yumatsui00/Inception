@@ -1,11 +1,3 @@
-#version: '3' #dockercomposeのバージョン
-#services: #コンテナ定義セクション
-#  incep: #名前
-#    build: ./requirements/nginx #Dockerfileの場所
-#    container_name: nginx
-#    ports: #繋げたいポートの指定。左がホスト、右がコンテナのポート番号
-#      - "443:443"
-
 services:
   mariadb:
     image: mariadb
