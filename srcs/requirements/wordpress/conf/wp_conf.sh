@@ -46,7 +46,6 @@ wp user create "$WP_U_NAME" "$WP_U_EMAIL" --user_pass="$WP_U_PASS" --role="$WP_U
 # いる？
 # wp search-replace 'http://localhost' "http://$DOMAIN_NAME"
 
-使用が有効。異なるコンテナ感で間ではTCP
 sed -i '36 s@/run/php/php7.4-fpm.sock@9000@' /etc/php/7.4/fpm/pool.d/www.conf
 
 mkdir -p /run/php

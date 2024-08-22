@@ -1,4 +1,4 @@
-WP_PATH = /home/yumatsui/html
+WP_PATH = /home/yumatsui/data/html
 MariaDB_PATH = /home/yumatsui/mariadb
 
 all: up
@@ -8,7 +8,7 @@ up: inception
 	@mkdir -p $(MariaDB_PATH)
 	@sudo chmod -R 755 $(WP_PATH)
 	@sudo chmod -R 755 $(MariaDB_PATH)
-	docker-compose -f srcs/docker-compose.yml up -d
+	docker-compose -f srcs/docker-compose.yml up
 
 build:
 	docker-compose -f srcs/docker-compose.yml build

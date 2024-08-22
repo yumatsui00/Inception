@@ -55,7 +55,7 @@ volumes:
     name: wordpress
     driver: local
     driver_opts:
-      device: /home/yumatsui/html
+      device: /home/yumatsui/data/html
       o : bind
       type : none
 
